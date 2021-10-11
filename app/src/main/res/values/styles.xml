@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.FlaminGoes" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#D64CCF</item>
-        <item name="colorPrimaryVariant">@color/purple_200</item>
+        <item name="colorPrimary">#E94BC6</item>
+        <item name="colorPrimaryVariant">#FA9CE5</item>
         <item name="colorOnPrimary">#885AA8</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
