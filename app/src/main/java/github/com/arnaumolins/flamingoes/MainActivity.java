@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (task.isSuccessful()){
                     Toast.makeText(MainActivity.this, "Login passed successfully!", Toast.LENGTH_SHORT).show();
                     progressBar1.setVisibility(View.GONE);
-                    //redirect to clement
+                    startActivity(new Intent(MainActivity.this, WarningActivity.class));
                 }else{
                     Toast.makeText(MainActivity.this, "Login failed! Check your credentials!", Toast.LENGTH_SHORT).show();
                     progressBar1.setVisibility(View.GONE);
