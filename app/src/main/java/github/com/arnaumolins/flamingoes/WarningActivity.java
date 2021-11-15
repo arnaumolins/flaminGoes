@@ -14,7 +14,6 @@ public class WarningActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView banner3;
     private Button play;
-    private ProgressBar progressBar3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +34,7 @@ public class WarningActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.playButton:
                 Toast.makeText(WarningActivity.this, "Game starting now!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, GameActivity.class));
         }
     }
 }

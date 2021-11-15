@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView createAccountListener;
     private EditText email1, psswrd1;
-    private ProgressBar progressBar1;
+    private ProgressBar progressBar1, progressBar3;
     private FirebaseAuth mAuth;
     private Button loginUser;
     
@@ -36,9 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         email1 = (EditText) findViewById(R.id.email);
         psswrd1 = (EditText) findViewById(R.id.password);
         progressBar1 = (ProgressBar) findViewById(R.id.progressBar);
-
         mAuth = FirebaseAuth.getInstance();
-
         loginUser = (Button) findViewById(R.id.loginUser);
         loginUser.setOnClickListener(this);
 
