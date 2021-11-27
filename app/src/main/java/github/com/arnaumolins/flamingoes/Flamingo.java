@@ -19,6 +19,22 @@ public class Flamingo {
         this.move_bottom = false;
     }
 
+    public void update(){
+        if(move_right){
+            setX(x+1);
+            move_right = false;
+        }else if(move_left){
+            setX(x-1);
+            move_left = false;
+        }else if(move_up){
+            setY(y+1);
+            move_up = false;
+        }else if (move_bottom){
+            setY(y-1);
+            move_bottom = false;
+        }
+    }
+
     public Bitmap getBm() {
         return bm;
     }
