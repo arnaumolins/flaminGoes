@@ -109,7 +109,6 @@ public class GameView extends View {
 
     public void generateMap(){
         generateLavaArray(); // Generate array of Lava positions.
-        generateReward(); // Create a reward.
         int k = 0;
         for (int i = 0; i < h; i++){
             for (int j = 0; j < w; j++){
@@ -121,6 +120,7 @@ public class GameView extends View {
                 }
             }
         }
+        generateReward(); // Create a reward.
     }
 
     public void generateLavaArray(){
@@ -156,7 +156,7 @@ public class GameView extends View {
                 posY = rd.nextInt(21);
             }
         }
-        reward = new Reward(posX * sizeOfMap + Constants.SCREEN_WIDTH / 2 - (w / 2) * sizeOfMap, posY * sizeOfMap + 100 * Constants.SCREEN_HEIGHT / 1920, bmReward);
+        reward = new Reward(arrFloor.get((w*posY)+posX).getX(), arrFloor.get((w*posY)+posX).getY(), bmReward);
     }
 
     public void generateFlamingo(){
