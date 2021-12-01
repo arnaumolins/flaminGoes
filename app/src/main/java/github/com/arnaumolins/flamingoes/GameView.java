@@ -1,5 +1,7 @@
 package github.com.arnaumolins.flamingoes;
 
+import static java.util.Arrays.sort;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,19 +10,25 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Handler;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameView extends View {
     private Bitmap bmFloor1, bmLava, bmFlamingo;
+    private Button start;
     public static int sizeOfMap = 75*Constants.SCREEN_WIDTH/1000;
     private int h = 21, w = 12;
     private ArrayList<Floor> arrFloor = new ArrayList<>();
     private Flamingo flamingo;
     private boolean move = false;
     private float mx, my;
+    private int[] arrLava = new int[20];
+    private Random rd;
     private Handler handler;
     private Runnable r;
 
@@ -32,9 +40,16 @@ public class GameView extends View {
         bmLava = Bitmap.createScaledBitmap(bmLava, sizeOfMap, sizeOfMap, true);
         bmFlamingo = BitmapFactory.decodeResource(this.getResources(), R.drawable.flamingo);
         bmFlamingo = Bitmap.createScaledBitmap(bmFlamingo, sizeOfMap, sizeOfMap, true);
+        generateLava();
+        int k = 0;
         for (int i = 0; i < h; i++){
             for (int j = 0; j < w; j++){
-                arrFloor.add(new Floor(bmFloor1, j*sizeOfMap + Constants.SCREEN_WIDTH/2-(w/2)*sizeOfMap, i*sizeOfMap+100*Constants.SCREEN_HEIGHT/1920, sizeOfMap, sizeOfMap));
+                if ((w*i)+j == arrLava[k]){
+                    arrFloor.add(new Floor(bmLava, j*sizeOfMap + Constants.SCREEN_WIDTH/2-(w/2)*sizeOfMap, i*sizeOfMap+100*Constants.SCREEN_HEIGHT/1920, sizeOfMap, sizeOfMap));
+                    k = k+1;
+                }else{
+                    arrFloor.add(new Floor(bmFloor1, j*sizeOfMap + Constants.SCREEN_WIDTH/2-(w/2)*sizeOfMap, i*sizeOfMap+100*Constants.SCREEN_HEIGHT/1920, sizeOfMap, sizeOfMap));
+                }
             }
         }
         flamingo = new Flamingo(bmFlamingo, arrFloor.get(125).getX(), arrFloor.get(136).getY());
@@ -90,13 +105,33 @@ public class GameView extends View {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        canvas.drawColor(0xFFBB86FC);
+        canvas.drawColor(0xFFFA9CE5);
         for (int i = 0; i < arrFloor.size(); i++){
             canvas.drawBitmap(arrFloor.get(i).getBm(), arrFloor.get(i).getX(), arrFloor.get(i).getY(), null);
         }
         flamingo.update();
         flamingo.draw(canvas);
-        handler.postDelayed(r, 100);
+        handler.postDelayed(r, 1);
 
+    }
+
+    public void generateLava(){
+        rd = new Random();
+        for (int i = 0; i < arrLava.length; i++) {
+            arrLava[i] = rd.nextInt(252);
+        }
+        checkRepeated(arrLava);
+        sort(arrLava);
+    }
+
+    public void checkRepeated(int[] arrLava){
+        for (int i = 0; i < arrLava.length; i++){
+            for (int j = 0; j < arrLava.length; j++){
+                if (i!=j && arrLava[i]==arrLava[j]){
+                    arrLava[j] = rd.nextInt(252);
+                    checkRepeated(arrLava);
+                }
+            }
+        }
     }
 }
