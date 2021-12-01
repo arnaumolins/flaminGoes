@@ -138,7 +138,9 @@ public class GameView extends View {
         for (int i = 0; i < arrLava.length; i++){
             for (int j = 0; j < arrLava.length; j++){
                 if (i!=j && arrLava[i]==arrLava[j]){
-                    arrLava[j] = rd.nextInt(252);
+                    arrXLava[j] = rd.nextInt(12);
+                    arrYLava[j] = rd.nextInt(21);
+                    arrLava[j] = arrYLava[j] * arrXLava[j];
                     checkRepeatedLava(arrLava);
                 }
             }
