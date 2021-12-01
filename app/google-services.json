@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "958031375389",
+    "firebase_url": "https://flamingoes-3c227-default-rtdb.firebaseio.com",
+    "project_id": "flamingoes-3c227",
+    "storage_bucket": "flamingoes-3c227.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958031375389:android:e334f2c30f1f4a6b926af4",
+        "android_client_info": {
+          "package_name": "github.com.arnaumolins.flamingoes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958031375389-lg6i2td06057074bvihbbl39d57g4pua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGLVq4vJUJoeFVmEHtED6DzQKfF27DxwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958031375389-lg6i2td06057074bvihbbl39d57g4pua.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

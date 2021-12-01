@@ -10,8 +10,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Handler;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -19,15 +17,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GameView extends View {
-    private Bitmap bmFloor1, bmLava, bmFlamingo;
-    private Button start;
+    private Bitmap bmFloor1, bmLava, bmFlamingo, bmReward;
     public static int sizeOfMap = 75*Constants.SCREEN_WIDTH/1000;
     private int h = 21, w = 12;
     private ArrayList<Floor> arrFloor = new ArrayList<>();
     private Flamingo flamingo;
+    private Reward reward;
     private boolean move = false;
     private float mx, my;
     private int[] arrLava = new int[20];
+    private int[] arrXLava = new int[20];
+    private int[] arrYLava = new int[20];
     private Random rd;
     private Handler handler;
     private Runnable r;
@@ -40,19 +40,10 @@ public class GameView extends View {
         bmLava = Bitmap.createScaledBitmap(bmLava, sizeOfMap, sizeOfMap, true);
         bmFlamingo = BitmapFactory.decodeResource(this.getResources(), R.drawable.flamingo);
         bmFlamingo = Bitmap.createScaledBitmap(bmFlamingo, sizeOfMap, sizeOfMap, true);
-        generateLava();
-        int k = 0;
-        for (int i = 0; i < h; i++){
-            for (int j = 0; j < w; j++){
-                if ((w*i)+j == arrLava[k]){
-                    arrFloor.add(new Floor(bmLava, j*sizeOfMap + Constants.SCREEN_WIDTH/2-(w/2)*sizeOfMap, i*sizeOfMap+100*Constants.SCREEN_HEIGHT/1920, sizeOfMap, sizeOfMap));
-                    k = k+1;
-                }else{
-                    arrFloor.add(new Floor(bmFloor1, j*sizeOfMap + Constants.SCREEN_WIDTH/2-(w/2)*sizeOfMap, i*sizeOfMap+100*Constants.SCREEN_HEIGHT/1920, sizeOfMap, sizeOfMap));
-                }
-            }
-        }
-        flamingo = new Flamingo(bmFlamingo, arrFloor.get(125).getX(), arrFloor.get(136).getY());
+        bmReward = BitmapFactory.decodeResource(this.getResources(), R.drawable.reward);
+        bmReward = Bitmap.createScaledBitmap(bmReward, sizeOfMap, sizeOfMap, true);
+        generateMap(); // Generate the map with the lava positions and create a reward.
+        generateFlamingo(); // Create the flamingo.
         handler = new Handler();
         r = new Runnable() {
             @Override
@@ -111,27 +102,74 @@ public class GameView extends View {
         }
         flamingo.update();
         flamingo.draw(canvas);
+        reward.draw(canvas);
         handler.postDelayed(r, 1);
 
     }
 
-    public void generateLava(){
+    public void generateMap(){
+        generateLavaArray(); // Generate array of Lava positions.
+        generateReward(); // Create a reward.
+        int k = 0;
+        for (int i = 0; i < h; i++){
+            for (int j = 0; j < w; j++){
+                if (k < 20 && (w * i) + j == arrLava[k]) {
+                    arrFloor.add(new Floor(bmLava, j * sizeOfMap + Constants.SCREEN_WIDTH / 2 - (w / 2) * sizeOfMap, i * sizeOfMap + 100 * Constants.SCREEN_HEIGHT / 1920, sizeOfMap, sizeOfMap));
+                    k = k + 1;
+                } else {
+                    arrFloor.add(new Floor(bmFloor1, j * sizeOfMap + Constants.SCREEN_WIDTH / 2 - (w / 2) * sizeOfMap, i * sizeOfMap + 100 * Constants.SCREEN_HEIGHT / 1920, sizeOfMap, sizeOfMap));
+                }
+            }
+        }
+    }
+
+    public void generateLavaArray(){
         rd = new Random();
         for (int i = 0; i < arrLava.length; i++) {
-            arrLava[i] = rd.nextInt(252);
+            arrXLava[i] = rd.nextInt(12);
+            arrYLava[i] = rd.nextInt(21);
+            arrLava[i] = arrYLava[i] * arrXLava[i];
         }
-        checkRepeated(arrLava);
+        checkRepeatedLava(arrLava);
         sort(arrLava);
     }
 
-    public void checkRepeated(int[] arrLava){
+    public void checkRepeatedLava(int[] arrLava){
         for (int i = 0; i < arrLava.length; i++){
             for (int j = 0; j < arrLava.length; j++){
                 if (i!=j && arrLava[i]==arrLava[j]){
                     arrLava[j] = rd.nextInt(252);
-                    checkRepeated(arrLava);
+                    checkRepeatedLava(arrLava);
                 }
             }
         }
+    }
+
+    public void generateReward(){
+        rd = new Random();
+        int posX, posY;
+        posX = rd.nextInt(12);
+        posY = rd.nextInt(21);
+        for (int i = 0; i < arrLava.length; i++){
+            if((w*posY)+posX == arrLava[i]){
+                posX = rd.nextInt(12);
+                posY = rd.nextInt(21);
+            }
+        }
+        reward = new Reward(posX * sizeOfMap + Constants.SCREEN_WIDTH / 2 - (w / 2) * sizeOfMap, posY * sizeOfMap + 100 * Constants.SCREEN_HEIGHT / 1920, bmReward);
+    }
+
+    public void generateFlamingo(){
+        rd = new Random();
+        int posX, posY;
+        posX = rd.nextInt(12);
+        posY = rd.nextInt(21);
+        for (int i = 0; i < arrLava.length; i++){
+            if((w*posY)+posX == arrLava[i]){
+                posX = rd.nextInt(12);
+                posY = rd.nextInt(21);
+            }
+        }
+        flamingo = new Flamingo(bmFlamingo, arrFloor.get((w*posY)+posX).getX(), arrFloor.get((w*posY)+posX).getY());
     }
 }
