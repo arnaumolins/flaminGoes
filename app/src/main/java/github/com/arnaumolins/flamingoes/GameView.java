@@ -25,9 +25,7 @@ public class GameView extends View {
     private Reward reward;
     private boolean move = false;
     private float mx, my;
-    private int[] arrLava = new int[20];
-    private int[] arrXLava = new int[20];
-    private int[] arrYLava = new int[20];
+    private int[] arrLava = new int[40];
     private Random rd;
     private Handler handler;
     private Runnable r;
@@ -55,8 +53,8 @@ public class GameView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int a = event.getActionMasked();
-        switch (a){
+        int swipe = event.getActionMasked();
+        switch (swipe){
             case MotionEvent.ACTION_MOVE:{
                 if (move == false){
                     mx = event.getX();
@@ -103,7 +101,7 @@ public class GameView extends View {
         flamingo.update();
         flamingo.draw(canvas);
         reward.draw(canvas);
-        handler.postDelayed(r, 1);
+        handler.postDelayed(r, 500);
 
     }
 
@@ -112,7 +110,7 @@ public class GameView extends View {
         int k = 0;
         for (int i = 0; i < h; i++){
             for (int j = 0; j < w; j++){
-                if (k < 20 && (w * i) + j == arrLava[k]) {
+                if (k < 40 && (w * i) + j == arrLava[k]) {
                     arrFloor.add(new Floor(bmLava, j * sizeOfMap + Constants.SCREEN_WIDTH / 2 - (w / 2) * sizeOfMap, i * sizeOfMap + 100 * Constants.SCREEN_HEIGHT / 1920, sizeOfMap, sizeOfMap));
                     k = k + 1;
                 } else {
@@ -126,21 +124,18 @@ public class GameView extends View {
     public void generateLavaArray(){
         rd = new Random();
         for (int i = 0; i < arrLava.length; i++) {
-            arrXLava[i] = rd.nextInt(12);
-            arrYLava[i] = rd.nextInt(21);
-            arrLava[i] = arrYLava[i] * arrXLava[i];
+            arrLava[i] = rd.nextInt(252);
         }
         checkRepeatedLava(arrLava);
         sort(arrLava);
     }
 
     public void checkRepeatedLava(int[] arrLava){
+        rd = new Random();
         for (int i = 0; i < arrLava.length; i++){
             for (int j = 0; j < arrLava.length; j++){
                 if (i!=j && arrLava[i]==arrLava[j]){
-                    arrXLava[j] = rd.nextInt(12);
-                    arrYLava[j] = rd.nextInt(21);
-                    arrLava[j] = arrYLava[j] * arrXLava[j];
+                    arrLava[j] = rd.nextInt(252);
                     checkRepeatedLava(arrLava);
                 }
             }

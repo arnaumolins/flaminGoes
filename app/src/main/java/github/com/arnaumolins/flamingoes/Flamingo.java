@@ -13,21 +13,17 @@ public class Flamingo {
         this.bm = bm;
         this.x = x;
         this.y = y;
-        this.move_right = false;
-        this.move_left = false;
-        this.move_up = false;
-        this.move_bottom = false;
     }
 
     public void update(){
         if(move_right){
-            setX(x+1);
+            setX(x+GameView.sizeOfMap);
         }else if(move_left){
-            setX(x-1);
+            setX(x-GameView.sizeOfMap);
         }else if(move_up){
-            setY(y+1);
+            setY(y+GameView.sizeOfMap);
         }else if (move_bottom){
-            setY(y-1);
+            setY(y-GameView.sizeOfMap);
         }
     }
 
@@ -64,6 +60,7 @@ public class Flamingo {
     }
 
     public void setMove_right(boolean move_right) {
+        s();
         this.move_right = move_right;
     }
 
@@ -72,6 +69,7 @@ public class Flamingo {
     }
 
     public void setMove_left(boolean move_left) {
+        s();
         this.move_left = move_left;
     }
 
@@ -80,6 +78,7 @@ public class Flamingo {
     }
 
     public void setMove_up(boolean move_up) {
+        s();
         this.move_up = move_up;
     }
 
@@ -88,7 +87,15 @@ public class Flamingo {
     }
 
     public void setMove_bottom(boolean move_bottom) {
+        s();
         this.move_bottom = move_bottom;
+    }
+
+    public void s(){
+        this.move_right = false;
+        this.move_left = false;
+        this.move_up = false;
+        this.move_bottom = false;
     }
 
 }
