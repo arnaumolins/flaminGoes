@@ -1,10 +1,8 @@
 package github.com.arnaumolins.flamingoes;
 
-import static androidx.core.content.ContextCompat.startActivity;
 import static java.util.Arrays.sort;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Handler;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -21,9 +19,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GameView extends View {
+    private static Context mContext;
     private Bitmap bmFloor1, bmLava, bmFlamingo, bmReward;
     public static int sizeOfMap = 75*Constants.SCREEN_WIDTH/1000;
     private int h = 21, w = 12;
+    private int count = 0;
     private ArrayList<Floor> arrFloor = new ArrayList<>();
     private Flamingo flamingo;
     private Reward reward;
@@ -33,9 +33,12 @@ public class GameView extends View {
     private Random rd;
     private Handler handler;
     private Runnable r;
+    private TextView counterReward;
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
+        counterReward = (TextView) findViewById(R.id.counterReward);
         bmFloor1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.good_cell);
         bmFloor1 = Bitmap.createScaledBitmap(bmFloor1, sizeOfMap, sizeOfMap, true);
         bmLava = BitmapFactory.decodeResource(this.getResources(), R.drawable.bad_cell_png);
@@ -106,8 +109,15 @@ public class GameView extends View {
         reward.draw(canvas);
         if(flamingo.getR().intersect(reward.getR())){
             generateMap();
+            count++;
+            //editing textView
         }
-        handler.postDelayed(r, 500);
+        for(int i = 0; i < arrLava.length; i++) {
+            if (flamingo.getR().intersect(arrFloor.get(arrLava[i]).getR())) {
+                gameOverView();
+            }
+        }
+        handler.postDelayed(r, 400);
 
     }
 
@@ -180,4 +190,7 @@ public class GameView extends View {
         flamingo = new Flamingo(bmFlamingo, arrFloor.get((w*posY)+posX).getX(), arrFloor.get((w*posY)+posX).getY());
     }
 
+    public static void gameOverView(){
+        GameActivity.GameOver(true, mContext);
+    }
 }
