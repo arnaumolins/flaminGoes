@@ -2,11 +2,12 @@ package github.com.arnaumolins.flamingoes;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 public class Reward {
     private int x, y;
     private Bitmap bm;
-    private int rewardCell = (12*y)+x;
+    private Rect r;
 
     public Reward(int x, int y, Bitmap bm) {
         this.x = x;
@@ -30,12 +31,12 @@ public class Reward {
         return y;
     }
 
-    public int getRewardCell() {
-        return rewardCell;
+    public void setR(Rect r){
+        this.r=r;
     }
 
-    public void setRewardCell(int rewardCell) {
-        this.rewardCell = rewardCell;
+    public Rect getR(){
+        return new Rect(this.x, this.y, this.x+GameView.sizeOfMap, this.y+GameView.sizeOfMap);
     }
 
     public void draw(Canvas canvas){

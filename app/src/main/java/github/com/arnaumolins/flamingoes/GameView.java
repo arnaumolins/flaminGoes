@@ -1,15 +1,19 @@
 package github.com.arnaumolins.flamingoes;
 
+import static androidx.core.content.ContextCompat.startActivity;
 import static java.util.Arrays.sort;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -41,7 +45,6 @@ public class GameView extends View {
         bmReward = BitmapFactory.decodeResource(this.getResources(), R.drawable.reward);
         bmReward = Bitmap.createScaledBitmap(bmReward, sizeOfMap, sizeOfMap, true);
         generateMap(); // Generate the map with the lava positions and create a reward.
-        generateFlamingo(); // Create the flamingo.
         handler = new Handler();
         r = new Runnable() {
             @Override
@@ -61,19 +64,19 @@ public class GameView extends View {
                     my = event.getY();
                     move = true;
                 }else{
-                    if(mx - event.getX() > 100*Constants.SCREEN_WIDTH/1080 && !flamingo.isMove_right()){
+                    if(mx - event.getX() > (100*Constants.SCREEN_WIDTH)/1080 && !flamingo.isMove_right()){
                         mx = event.getX();
                         my = event.getY();
                         flamingo.setMove_left(true);
-                    }else if(event.getX() - mx > 100*Constants.SCREEN_WIDTH/1080 && !flamingo.isMove_left()){
+                    }else if(event.getX() - mx > (100*Constants.SCREEN_WIDTH)/1080 && !flamingo.isMove_left()){
                         mx = event.getX();
                         my = event.getY();
                         flamingo.setMove_right(true);
-                    }else if(my - event.getY() > 100*Constants.SCREEN_WIDTH/1080 && !flamingo.isMove_bottom()){
+                    }else if(my - event.getY() > (100*Constants.SCREEN_HEIGHT)/1080 && !flamingo.isMove_bottom()){
                         mx = event.getX();
                         my = event.getY();
                         flamingo.setMove_bottom(true);
-                    }else if(event.getY() - my > 100*Constants.SCREEN_WIDTH/1080 && !flamingo.isMove_up()){
+                    }else if(event.getY() - my > (100*Constants.SCREEN_HEIGHT)/1080 && !flamingo.isMove_up()){
                         mx = event.getX();
                         my = event.getY();
                         flamingo.setMove_up(true);
@@ -101,9 +104,13 @@ public class GameView extends View {
         flamingo.update();
         flamingo.draw(canvas);
         reward.draw(canvas);
+        if(flamingo.getR().intersect(reward.getR())){
+            generateMap();
+        }
         handler.postDelayed(r, 500);
 
     }
+
 
     public void generateMap(){
         generateLavaArray(); // Generate array of Lava positions.
@@ -112,12 +119,14 @@ public class GameView extends View {
             for (int j = 0; j < w; j++){
                 if (k < 40 && (w * i) + j == arrLava[k]) {
                     arrFloor.add(new Floor(bmLava, j * sizeOfMap + Constants.SCREEN_WIDTH / 2 - (w / 2) * sizeOfMap, i * sizeOfMap + 100 * Constants.SCREEN_HEIGHT / 1920, sizeOfMap, sizeOfMap));
+                    arrFloor.get((w*i)+j).setR(new Rect(arrFloor.get(j).getX(), arrFloor.get(i).getY(), arrFloor.get(j).getX()+sizeOfMap, arrFloor.get(i).getY()+sizeOfMap));
                     k = k + 1;
                 } else {
                     arrFloor.add(new Floor(bmFloor1, j * sizeOfMap + Constants.SCREEN_WIDTH / 2 - (w / 2) * sizeOfMap, i * sizeOfMap + 100 * Constants.SCREEN_HEIGHT / 1920, sizeOfMap, sizeOfMap));
                 }
             }
         }
+        generateFlamingo(); // Create the flamingo.
         generateReward(); // Create a reward.
     }
 
@@ -153,6 +162,7 @@ public class GameView extends View {
                 posY = rd.nextInt(21);
             }
         }
+        Rect rect = new Rect(arrFloor.get(posX).getX(), arrFloor.get(posY).getY(), arrFloor.get(posX).getX()+sizeOfMap, arrFloor.get(posY).getY()+sizeOfMap);
         reward = new Reward(arrFloor.get((w*posY)+posX).getX(), arrFloor.get((w*posY)+posX).getY(), bmReward);
     }
 
@@ -169,4 +179,5 @@ public class GameView extends View {
         }
         flamingo = new Flamingo(bmFlamingo, arrFloor.get((w*posY)+posX).getX(), arrFloor.get((w*posY)+posX).getY());
     }
+
 }

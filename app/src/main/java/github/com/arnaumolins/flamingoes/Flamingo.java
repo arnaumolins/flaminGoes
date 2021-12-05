@@ -2,27 +2,35 @@ package github.com.arnaumolins.flamingoes;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 public class Flamingo {
 
+    public int actualFloor;
     private boolean move_right, move_left, move_up, move_bottom;
     private Bitmap bm;
     private int x, y;
+    private Rect r;
 
     public Flamingo(Bitmap bm, int x, int y) {
         this.bm = bm;
         this.x = x;
         this.y = y;
+        this.actualFloor = (12*y)+x;
     }
 
     public void update(){
         if(move_right){
+            actualFloor = actualFloor+1;
             setX(x+GameView.sizeOfMap);
         }else if(move_left){
+            actualFloor = actualFloor-1;
             setX(x-GameView.sizeOfMap);
         }else if(move_up){
+            actualFloor = actualFloor-12;
             setY(y+GameView.sizeOfMap);
         }else if (move_bottom){
+            actualFloor = actualFloor+12;
             setY(y-GameView.sizeOfMap);
         }
     }
@@ -96,6 +104,14 @@ public class Flamingo {
         this.move_left = false;
         this.move_up = false;
         this.move_bottom = false;
+    }
+
+    public void setR(Rect r){
+        this.r=r;
+    }
+
+    public Rect getR(){
+        return new Rect(this.x, this.y, this.x+GameView.sizeOfMap, this.y+GameView.sizeOfMap);
     }
 
 }

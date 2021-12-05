@@ -1,10 +1,12 @@
 package github.com.arnaumolins.flamingoes;
 
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 
 public class Floor {
     private Bitmap bm;
     private int x, y, width, height;
+    private Rect r;
 
     public Floor(Bitmap bm, int x, int y, int width, int height){
         this.bm = bm;
@@ -53,4 +55,13 @@ public class Floor {
     public void setHeight(int height) {
         this.height = height;
     }
+
+    public void setR(Rect r){
+        this.r=r;
+    }
+
+    public Rect getR(){
+        return new Rect(this.x, this.y, this.x+GameView.sizeOfMap, this.y+GameView.sizeOfMap);
+    }
+
 }
