@@ -82,6 +82,8 @@ public class GameView extends View {
                         mx = event.getX();
                         my = event.getY();
                         this.flamingo.setMove_up(true);
+                    }else{
+                        return false;
                     }
                 }
                 break;
