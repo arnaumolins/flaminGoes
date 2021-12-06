@@ -16,10 +16,10 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         DisplayMetrics dm = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        rewardCounter = (TextView) findViewById(R.id.counterReward);
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
         setContentView(R.layout.activity_game);
+        rewardCounter = findViewById(R.id.counterReward);
 
     }
 
@@ -30,7 +30,4 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public static void setRewardCounter(String stringReward){
-        rewardCounter.setText(stringReward);
-    }
 }

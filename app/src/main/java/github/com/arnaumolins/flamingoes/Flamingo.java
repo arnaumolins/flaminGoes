@@ -6,7 +6,6 @@ import android.graphics.Rect;
 
 public class Flamingo {
 
-    public int actualFloor;
     private boolean move_right, move_left, move_up, move_bottom;
     private Bitmap bm;
     private int x, y;
@@ -16,21 +15,16 @@ public class Flamingo {
         this.bm = bm;
         this.x = x;
         this.y = y;
-        this.actualFloor = (12*y)+x;
     }
 
     public void update(){
         if(move_right){
-            actualFloor = actualFloor+1;
             setX(x+GameView.sizeOfMap);
         }else if(move_left){
-            actualFloor = actualFloor-1;
             setX(x-GameView.sizeOfMap);
         }else if(move_up){
-            actualFloor = actualFloor-12;
             setY(y+GameView.sizeOfMap);
         }else if (move_bottom){
-            actualFloor = actualFloor+12;
             setY(y-GameView.sizeOfMap);
         }
     }
