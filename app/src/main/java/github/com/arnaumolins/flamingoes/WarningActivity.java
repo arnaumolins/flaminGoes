@@ -13,7 +13,7 @@ import android.widget.Toast;
 public class WarningActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView banner3;
-    private Button play;
+    private Button play, info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,8 @@ public class WarningActivity extends AppCompatActivity implements View.OnClickLi
         banner3.setOnClickListener(this);
         play = (Button) findViewById(R.id.playButton);
         play.setOnClickListener(this);
+        info = (Button) findViewById(R.id.infoButton);
+        info.setOnClickListener(this);
     }
 
     @Override
@@ -33,8 +35,11 @@ public class WarningActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.playButton:
-                Toast.makeText(WarningActivity.this, "Game starting now!", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(this, GameActivity.class));
+                break;
+            case R.id.infoButton:
+                startActivity(new Intent(this, InformationActivity.class));
+                break;
         }
     }
 }

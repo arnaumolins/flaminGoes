@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Handler;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -23,22 +22,21 @@ public class GameView extends View {
     private Bitmap bmFloor1, bmLava, bmFlamingo, bmReward;
     public static int sizeOfMap = 75*Constants.SCREEN_WIDTH/1000;
     private int h = 21, w = 12;
-    private int count = 0;
+    public static int count = 0;
+    private int level = 30;
     private ArrayList<Floor> arrFloor = new ArrayList<>();
     private Flamingo flamingo;
     private Reward reward;
     private boolean move = false;
     private float mx, my;
-    private int[] arrLava = new int[40];
+    private int[] arrLava = new int[level];
     private Random rd;
     private Handler handler;
     private Runnable r;
-    private TextView counterReward;
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        counterReward = (TextView) findViewById(R.id.counterReward);
         bmFloor1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.good_cell);
         bmFloor1 = Bitmap.createScaledBitmap(bmFloor1, sizeOfMap, sizeOfMap, true);
         bmLava = BitmapFactory.decodeResource(this.getResources(), R.drawable.bad_cell_png);
@@ -67,19 +65,19 @@ public class GameView extends View {
                     my = event.getY();
                     move = true;
                 }else{
-                    if(mx - event.getX() > (100*Constants.SCREEN_WIDTH)/1080 && !flamingo.isMove_right()){
+                    if(mx - event.getX() > (100*Constants.SCREEN_WIDTH)/1080 /*&& !flamingo.isMove_right()*/){
                         mx = event.getX();
                         my = event.getY();
                         flamingo.setMove_left(true);
-                    }else if(event.getX() - mx > (100*Constants.SCREEN_WIDTH)/1080 && !flamingo.isMove_left()){
+                    }else if(event.getX() - mx > (100*Constants.SCREEN_WIDTH)/1080 /*&& !flamingo.isMove_left()*/){
                         mx = event.getX();
                         my = event.getY();
                         flamingo.setMove_right(true);
-                    }else if(my - event.getY() > (100*Constants.SCREEN_HEIGHT)/1080 && !flamingo.isMove_bottom()){
+                    }else if(my - event.getY() > (100*Constants.SCREEN_HEIGHT)/1080 /*&& !flamingo.isMove_bottom()*/){
                         mx = event.getX();
                         my = event.getY();
                         flamingo.setMove_bottom(true);
-                    }else if(event.getY() - my > (100*Constants.SCREEN_HEIGHT)/1080 && !flamingo.isMove_up()){
+                    }else if(event.getY() - my > (100*Constants.SCREEN_HEIGHT)/1080 /*&& !flamingo.isMove_up()*/){
                         mx = event.getX();
                         my = event.getY();
                         flamingo.setMove_up(true);
@@ -107,14 +105,18 @@ public class GameView extends View {
         flamingo.update();
         flamingo.draw(canvas);
         reward.draw(canvas);
-        if(flamingo.getR().intersect(reward.getR())){
+        if(flamingo.getR().intersect(reward.getR())) {
+            level = level + 5;
+            int[] tmp = new int[level];
+            System.arraycopy(arrLava, 0, tmp, 0, arrLava.length);
+            arrLava = tmp;
             generateMap();
-            count++;
-            //editing textView
+            count = count + 1;
+            String stringReward = "x " + count;
         }
         for(int i = 0; i < arrLava.length; i++) {
             if (flamingo.getR().intersect(arrFloor.get(arrLava[i]).getR())) {
-                gameOverView();
+                GameActivity.GameOver(true, mContext);
             }
         }
         handler.postDelayed(r, 400);
@@ -127,7 +129,7 @@ public class GameView extends View {
         int k = 0;
         for (int i = 0; i < h; i++){
             for (int j = 0; j < w; j++){
-                if (k < 40 && (w * i) + j == arrLava[k]) {
+                if (k < level && (w * i) + j == arrLava[k]) {
                     arrFloor.add(new Floor(bmLava, j * sizeOfMap + Constants.SCREEN_WIDTH / 2 - (w / 2) * sizeOfMap, i * sizeOfMap + 100 * Constants.SCREEN_HEIGHT / 1920, sizeOfMap, sizeOfMap));
                     arrFloor.get((w*i)+j).setR(new Rect(arrFloor.get(j).getX(), arrFloor.get(i).getY(), arrFloor.get(j).getX()+sizeOfMap, arrFloor.get(i).getY()+sizeOfMap));
                     k = k + 1;
@@ -188,9 +190,5 @@ public class GameView extends View {
             }
         }
         flamingo = new Flamingo(bmFlamingo, arrFloor.get((w*posY)+posX).getX(), arrFloor.get((w*posY)+posX).getY());
-    }
-
-    public static void gameOverView(){
-        GameActivity.GameOver(true, mContext);
     }
 }

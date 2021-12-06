@@ -6,17 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
+    public static TextView rewardCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DisplayMetrics dm = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        rewardCounter = (TextView) findViewById(R.id.counterReward);
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
         setContentView(R.layout.activity_game);
@@ -28,5 +28,9 @@ public class GameActivity extends AppCompatActivity {
             Intent gameOver = new Intent(mContext, GameOver.class);
             mContext.startActivity(gameOver);
         }
+    }
+
+    public static void setRewardCounter(String stringReward){
+        rewardCounter.setText(stringReward);
     }
 }
