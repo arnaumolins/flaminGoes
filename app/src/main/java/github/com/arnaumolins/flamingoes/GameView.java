@@ -66,19 +66,19 @@ public class GameView extends View {
                     my = event.getY();
                     move = true;
                 }else{
-                    if(mx - event.getX() > 100){
+                    if(mx - event.getX() > 100 && flamingo.getX()-1 >= arrFloor.get(0).getX()){
                         mx = event.getX();
                         my = event.getY();
                         this.flamingo.setMove_left(true);
-                    }else if(event.getX() - mx > 100){
+                    }else if(event.getX() - mx > 100 && flamingo.getX()+sizeOfMap <= this.arrFloor.get(this.arrFloor.size()-1).getX()+sizeOfMap){
                         mx = event.getX();
                         my = event.getY();
                         this.flamingo.setMove_right(true);
-                    }else if(my - event.getY() > 100){
+                    }else if(my - event.getY() > 100 && flamingo.getY()-1 >= arrFloor.get(0).getY()){
                         mx = event.getX();
                         my = event.getY();
                         this.flamingo.setMove_bottom(true);
-                    }else if(event.getY() - my > 100){
+                    }else if(event.getY() - my > 100 && flamingo.getY()+sizeOfMap <= this.arrFloor.get(this.arrFloor.size()-1).getY()+sizeOfMap){
                         mx = event.getX();
                         my = event.getY();
                         this.flamingo.setMove_up(true);
