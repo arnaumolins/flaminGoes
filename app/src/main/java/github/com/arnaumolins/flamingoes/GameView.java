@@ -28,7 +28,7 @@ public class GameView extends View {
     private ArrayList<Floor> arrFloor = new ArrayList<>();
     private Flamingo flamingo;
     private Reward reward;
-    private boolean move = false;
+    private boolean move = false, moveRight = true, moveUp = true, moveBot = true, moveLeft = true;
     private float mx, my;
     private int[] arrLava = new int[level];
     private Random rd;
@@ -66,24 +66,26 @@ public class GameView extends View {
                     my = event.getY();
                     move = true;
                 }else{
-                    if(mx - event.getX() > 100 && flamingo.getX()-1 >= arrFloor.get(0).getX()){
+                    if(mx - event.getX() > 100){
                         mx = event.getX();
                         my = event.getY();
+                        moveLeft = true;
                         this.flamingo.setMove_left(true);
-                    }else if(event.getX() - mx > 100 && flamingo.getX()+sizeOfMap <= this.arrFloor.get(this.arrFloor.size()-1).getX()+sizeOfMap){
+                    }else if(event.getX() - mx > 100){
                         mx = event.getX();
                         my = event.getY();
+                        moveRight = true;
                         this.flamingo.setMove_right(true);
-                    }else if(my - event.getY() > 100 && flamingo.getY()-1 >= arrFloor.get(0).getY()){
+                    }else if(my - event.getY() > 100){
                         mx = event.getX();
                         my = event.getY();
+                        moveBot = true;
                         this.flamingo.setMove_bottom(true);
-                    }else if(event.getY() - my > 100 && flamingo.getY()+sizeOfMap <= this.arrFloor.get(this.arrFloor.size()-1).getY()+sizeOfMap){
+                    }else if(event.getY() - my > 100){
                         mx = event.getX();
                         my = event.getY();
+                        moveUp = true;
                         this.flamingo.setMove_up(true);
-                    }else{
-                        return false;
                     }
                 }
                 break;
@@ -98,6 +100,36 @@ public class GameView extends View {
         return true;
     }
 
+    public boolean insideMap(){
+        if (flamingo.getX()-1 <= arrFloor.get(0).getX()){
+            if(moveRight || moveUp || moveBot){
+               return true;
+            }else{
+                return false;
+            }
+        }else if(flamingo.getX()+sizeOfMap >= this.arrFloor.get(this.arrFloor.size()-1).getX()+sizeOfMap){
+            if(moveLeft || moveUp || moveBot){
+                return true;
+            }else{
+                return false;
+            }
+        }else if( flamingo.getY()-1 <= arrFloor.get(0).getY()){
+            if(moveUp || moveLeft || moveRight){
+                return true;
+            }else{
+                return false;
+            }
+        }else if(flamingo.getY()+sizeOfMap >= this.arrFloor.get(this.arrFloor.size()-1).getY()+sizeOfMap){
+            if(moveBot || moveRight || moveLeft){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return true;
+        }
+    }
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -105,7 +137,13 @@ public class GameView extends View {
         for (int i = 0; i < arrFloor.size(); i++){
             canvas.drawBitmap(arrFloor.get(i).getBm(), arrFloor.get(i).getX(), arrFloor.get(i).getY(), null);
         }
-        flamingo.update();
+        if(insideMap()) {
+            flamingo.update();
+            moveBot = false;
+            moveLeft = false;
+            moveUp = false;
+            moveRight = false;
+        }
         flamingo.draw(canvas);
         reward.draw(canvas);
         if(flamingo.getR().intersect(reward.getR())) {
