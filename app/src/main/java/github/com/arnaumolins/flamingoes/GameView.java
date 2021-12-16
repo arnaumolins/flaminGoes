@@ -152,11 +152,12 @@ public class GameView extends View {
             System.arraycopy(arrLava, 0, tmp, 0, arrLava.length);
             arrLava = tmp;
             generateMap();
-            count++;
+            count = count + 1;
             GameActivity.rewardCounter.setText("x "+count);
         }
         for(int i = 0; i < arrLava.length; i++) {
             if (flamingo.getR().intersect(arrFloor.get(arrLava[i]).getR())) {
+                count = 0;
                 GameActivity.GameOver(true, mContext);
             }
         }
